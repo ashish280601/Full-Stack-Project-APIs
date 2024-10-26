@@ -1,12 +1,15 @@
 // custom file function module.
 import "./env.js";
-import { connectDB } from "./src/config/db.js";
 
 // inbuilt function module.
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+
+// custom file function module.
+import { connectDB } from "./src/config/db.js";
+import router from "./routes.js";
 
 const app = express();
 
@@ -26,21 +29,22 @@ const limiter = rateLimit({
     message: 'To many requests, please try again later.'
 });
 
+// root routes
+app.get('/', (req, res) => {
+    return res.status(200).json({
+        message: "Welcome to task manager application",
+        success: true,
+        status: 200
+      })  
+});
+
 // middleware 
 app.use(limiter);
 app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '500mb'}));
 app.use(express.urlencoded({ extended: true, limit: '500mb' }));
-
-// root routes.
-app.get('/', (req , res) => {
-    return res.json({
-        message: 'Welcome to Full stack development tasks', 
-        success: true,
-        status: 200
-    });
-})
+app.use('/api', router);
 
 app.listen(port, async() => {
     try {
