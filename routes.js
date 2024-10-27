@@ -2,6 +2,8 @@
 import express from "express";
 
 // custom file function module.
+import userRouter from "./src/features/users/users.router.js";
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -11,6 +13,8 @@ router.get('/', (req, res) => {
         status: 200
     })
 });
+
+router.use('/auth/user', userRouter)
 
 
 // No routes match
